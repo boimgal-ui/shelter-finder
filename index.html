@@ -107,6 +107,7 @@
   .pill{ display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,.12); padding:6px 12px; border-radius:999px; font-size:12px; color:#dff5ea; }
   .safety{ margin-top:14px; background:#fff7ed; border:1px solid #fed7aa; color:#9a3412; border-radius:12px; padding:11px 13px; font-size:13px; line-height:1.5; font-weight:600; }
   footer a.legal{ color:#bfe9d6; text-decoration:underline; cursor:pointer; }
+  .visits{ display:inline-block; color:#9fd7c2; font-size:12px; margin-top:4px; }
   .overlay{ position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:center; justify-content:center; padding:18px; z-index:50; }
   .overlay.show{ display:flex; }
   .sheet{ background:#fff; color:var(--ink); border-radius:18px; max-width:520px; width:100%; max-height:85dvh; overflow:auto; padding:22px; box-shadow:0 20px 50px rgba(0,0,0,.4); }
@@ -151,7 +152,7 @@
   <div id="error" class="card err"></div>
 </main>
 
-<footer>נתוני מקלטים ציבוריים · ‎10,561 נקודות · המרחק בקו אווירי<br><a class="legal" id="openLegal">תנאי שימוש, כתב ויתור ומדיניות פרטיות</a></footer>
+<footer>נתוני מקלטים ציבוריים · ‎10,561 נקודות · המרחק בקו אווירי<br><span id="visits" class="visits"></span><br><a class="legal" id="openLegal">תנאי שימוש, כתב ויתור ומדיניות פרטיות</a></footer>
 
 <div class="overlay" id="legalOverlay">
   <div class="sheet">
@@ -169,7 +170,7 @@
     <ul>
       <li>האפליקציה <b>אינה אוספת, שומרת או משדרת מידע אישי</b>.</li>
       <li>מיקום ה‑GPS שלכם מעובד <b>אך ורק על המכשיר שלכם</b>, מקומית, לצורך חישוב המקלט הקרוב — ואינו נשלח לשום שרת.</li>
-      <li>אין שימוש בעוגיות מעקב ואין כלי אנליטיקה.</li>
+      <li>אין עוגיות מעקב ואין מעקב אישי. נשמר רק <b>מונה ביקורים כולל ואנונימי</b> (מספר בלבד), ללא כתובת IP וללא כל מידע מזהה.</li>
       <li>בלחיצה על "נווט בגוגל מפס" / "Waze" אתם עוברים לשירות חיצוני הכפוף למדיניות הפרטיות שלו.</li>
       <li>האתר מתארח ב‑GitHub Pages, שעשוי לרשום נתונים טכניים בסיסיים (כגון כתובת IP) לצורכי תפעול ואבטחה, בהתאם למדיניות של GitHub.</li>
     </ul>
@@ -380,6 +381,18 @@ function openGeoHelp(){ geoHelpOverlay.classList.add("show"); }
 $("closeGeoHelp").addEventListener("click", ()=> geoHelpOverlay.classList.remove("show"));
 geoHelpOverlay.addEventListener("click", e=>{ if(e.target===geoHelpOverlay) geoHelpOverlay.classList.remove("show"); });
 $("retryGeo").addEventListener("click", ()=>{ geoHelpOverlay.classList.remove("show"); $("find").click(); });
+
+// ===== מונה ביקורים אנונימי =====
+(function(){
+  const HIT = "https://miklat-bot.vercel.app/api/hit", el = $("visits");
+  if(!el) return;
+  let inc = true;
+  try{ const k = "visited:" + new Date().toISOString().slice(0,10); if(localStorage.getItem(k)) inc = false; else localStorage.setItem(k,"1"); }catch(e){}
+  fetch(HIT + (inc ? "" : "?read=1"))
+    .then(r => r.json())
+    .then(d => { if(d && d.count != null) el.textContent = "👁 " + Number(d.count).toLocaleString("he-IL") + " ביקרו כאן"; })
+    .catch(()=>{});
+})();
 
 // רישום service worker לאופליין (רק כשמוגש מ‑https/localhost)
 if("serviceWorker" in navigator && location.protocol !== "file:"){
