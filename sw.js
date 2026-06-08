@@ -1,5 +1,5 @@
 // Service Worker — מאפשר שימוש אופליין מלא אחרי טעינה ראשונה
-const CACHE = "shelters-v2";
+const CACHE = "shelters-v3";
 const ASSETS = [
   ".",
   "index.html",
