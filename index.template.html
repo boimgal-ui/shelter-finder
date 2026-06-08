@@ -15,6 +15,28 @@
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="he_IL">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="מקלט קרוב — המקלט הקרוב אליך">
+<meta name="twitter:description" content="שולחים מיקום ומקבלים את המקלט הציבורי הקרוב ביותר + ניווט. עובד גם בלי אינטרנט.">
+<meta name="twitter:image" content="https://miklatkarov.com/og-image.png">
+<meta name="keywords" content="מקלט, מקלט קרוב, מקלטים, מרחב מוגן, ממד, פיקוד העורף, אזעקה, מקלט ציבורי, מקלט קרוב אליי, מקלטים בישראל, התגוננות, צבע אדום">
+<meta name="robots" content="index, follow">
+<meta name="author" content="מקלט קרוב">
+<link rel="canonical" href="https://miklatkarov.com/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "מקלט קרוב",
+  "alternateName": "Miklat Karov",
+  "url": "https://miklatkarov.com/",
+  "description": "מציאת המקלט הציבורי הקרוב ביותר לפי המיקום שלך, עם ניווט. עובד גם בלי אינטרנט.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "inLanguage": "he",
+  "isAccessibleForFree": true,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "ILS" }
+}
+</script>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -45,6 +67,21 @@
   .share-btn:active{ transform:scale(.98); }
   .toast{ position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:#0f172a; color:#fff; padding:12px 18px; border-radius:12px; font-size:14px; opacity:0; transition:opacity .25s; pointer-events:none; z-index:60; }
   .toast.show{ opacity:1; }
+  .guide-btn{ border-color:rgba(255,255,255,.45); background:rgba(255,255,255,.13); }
+  .phones{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:4px 0 6px; }
+  .phone{ display:flex; align-items:center; gap:8px; background:#f1f5f9; border-radius:12px; padding:11px 12px; text-decoration:none; color:var(--ink); font-weight:700; }
+  .phone .num{ color:var(--danger); font-size:18px; font-weight:800; }
+  .phone .lbl{ font-size:12.5px; color:#475569; font-weight:600; }
+  .guide-note{ background:#ecfdf5; border:1px solid #a7f3d0; color:#065f46; border-radius:12px; padding:11px 13px; font-size:13px; margin-bottom:14px; }
+  .guide-note a{ color:#047857; font-weight:800; }
+  details.qa{ border:1px solid #e2e8f0; border-radius:12px; margin-bottom:8px; overflow:hidden; }
+  details.qa summary{ cursor:pointer; padding:13px 14px; font-weight:700; font-size:14.5px; color:var(--ink); list-style:none; background:#f8fafc; }
+  details.qa summary::-webkit-details-marker{ display:none; }
+  details.qa summary::before{ content:"▸ "; color:var(--accent2); }
+  details.qa[open] summary::before{ content:"▾ "; }
+  details.qa .ans{ padding:4px 14px 14px; font-size:13.5px; line-height:1.65; color:#334155; }
+  details.qa .ans a{ color:var(--accent2); font-weight:700; }
+  .sheet h3.sec{ font-size:15px; margin:18px 0 8px; color:var(--muted); }
   .status{ text-align:center; min-height:20px; color:#cdeede; font-size:14px; }
   .card{ background:var(--card); color:var(--ink); border-radius:20px; padding:18px; box-shadow:0 10px 30px rgba(0,0,0,.25); display:none; }
   .card.show{ display:block; animation:pop .25s ease; }
@@ -91,6 +128,7 @@
   <button id="find" class="find-btn">📍 מצא מקלט קרוב אליי</button>
   <div id="status" class="status"><span class="pill" id="offline-pill">⚡ עובד גם בלי אינטרנט</span></div>
   <button id="share" class="share-btn">📲 שתף את האפליקציה</button>
+  <button id="openGuide" class="share-btn guide-btn">🛡️ הנחיות פיקוד העורף וטלפונים חשובים</button>
 
   <div id="result" class="card">
     <div class="dist-row">
@@ -137,6 +175,62 @@
     </ul>
     <button class="accept" id="acceptLegal">הבנתי ואני מאשר/ת</button>
     <button class="close" id="closeLegal">סגירה</button>
+  </div>
+</div>
+
+<div class="overlay" id="guideOverlay">
+  <div class="sheet">
+    <h2>🛡️ הנחיות פיקוד העורף</h2>
+    <div class="guide-note">ההנחיות המעודכנות והמלאות תמיד באתר הרשמי — <a href="https://www.oref.org.il/" target="_blank" rel="noopener">פיקוד העורף ›</a>. בכל אירוע פעלו לפי ההנחיות הרשמיות.</div>
+
+    <h3 class="sec">☎️ טלפונים חשובים</h3>
+    <div class="phones">
+      <a class="phone" href="tel:104"><span class="num">104</span><span class="lbl">מוקד פיקוד העורף</span></a>
+      <a class="phone" href="tel:101"><span class="num">101</span><span class="lbl">מד״א — חירום רפואי</span></a>
+      <a class="phone" href="tel:100"><span class="num">100</span><span class="lbl">משטרה</span></a>
+      <a class="phone" href="tel:102"><span class="num">102</span><span class="lbl">כבאות והצלה</span></a>
+      <a class="phone" href="tel:103"><span class="num">103</span><span class="lbl">חברת החשמל</span></a>
+      <a class="phone" href="tel:1201"><span class="num">1201</span><span class="lbl">ער״ן — סיוע נפשי</span></a>
+    </div>
+
+    <h3 class="sec">❓ שאלות נפוצות</h3>
+    <details class="qa"><summary>כמה זמן יש לי להיכנס למרחב מוגן?</summary>
+      <div class="ans">ברוב הארץ זמן ההתגוננות הוא <b>90 שניות</b>. באזורי ספר הוא קצר יותר — בין מיידי ל‑15, 30, 45 או 60 שניות. משך האזעקה שווה לזמן שיש לכם להגיע למרחב המוגן. <a href="https://www.oref.org.il/heb/alerts-history" target="_blank" rel="noopener">בדקו את הזמן המדויק ליישוב שלכם ›</a></div>
+    </details>
+    <details class="qa"><summary>לאן נכנסים כשיש אזעקה?</summary>
+      <div class="ans">לפי סדר עדיפות: <b>ממ״ד / ממ״ק</b> ← <b>מקלט פנימי בבניין</b> שמגיעים אליו דרך גרם מדרגות פנימי ← <b>מקלט ציבורי</b>, אם מספיקים להגיע בזמן. אם אין — חדר פנימי עם מספר קירות, רחוק מחלונות. <a href="https://www.oref.org.il/heb/life-saving-guidelines/rocket-and-missile-attacks" target="_blank" rel="noopener">הנחיות מלאות ›</a></div>
+    </details>
+    <details class="qa"><summary>כמה זמן נשארים במרחב המוגן?</summary>
+      <div class="ans">יש להישאר במרחב המוגן <b>10 דקות</b> מתום האזעקה (באזורים מסוימים יותר — לפי ההנחיה לאזורכם). <a href="https://www.oref.org.il/heb/life-saving-guidelines/rocket-and-missile-attacks" target="_blank" rel="noopener">מקור: פיקוד העורף ›</a></div>
+    </details>
+    <details class="qa"><summary>מה עושים בשטח פתוח (בלי מקלט)?</summary>
+      <div class="ans">אם יש מבנה בקרבת מקום — היכנסו אליו. אם לא — <b>שכבו על הקרקע והגנו על הראש בעזרת הידיים</b>. <a href="https://www.oref.org.il/heb/life-saving-guidelines/rocket-and-missile-attacks" target="_blank" rel="noopener">מקור ›</a></div>
+    </details>
+    <details class="qa"><summary>מה עושים ברכב?</summary>
+      <div class="ans">עצרו בצד בזהירות, צאו מהרכב והיכנסו למבנה או מקלט קרוב. אם אי אפשר — התרחקו מהרכב, שכבו על הקרקע והגנו על הראש. <a href="https://www.oref.org.il/heb/life-saving-guidelines/rocket-and-missile-attacks" target="_blank" rel="noopener">מקור ›</a></div>
+    </details>
+    <button class="close" id="closeGuide">סגירה</button>
+  </div>
+</div>
+
+<div class="overlay" id="geoHelpOverlay">
+  <div class="sheet">
+    <h2>איך מאפשרים גישה למיקום?</h2>
+    <p class="lead">כדי למצוא את המקלט הקרוב, הדפדפן צריך הרשאה למיקום. הנה איך מפעילים:</p>
+    <h3 class="sec">📱 אייפון (Safari)</h3>
+    <ul>
+      <li>הגדרות ← Safari ← מיקום ← בחרו "שאל" או "אפשר".</li>
+      <li>או: הגדרות ← פרטיות ואבטחה ← שירותי מיקום ← ודאו שהם דולקים.</li>
+      <li>חזרו לאתר ולחצו שוב "מצא מקלט קרוב".</li>
+    </ul>
+    <h3 class="sec">🤖 אנדרואיד (Chrome)</h3>
+    <ul>
+      <li>בדף האתר, לחצו על 🔒 ליד הכתובת ← הרשאות ← מיקום ← "אפשר".</li>
+      <li>ודאו ש‑GPS של הטלפון דלוק.</li>
+      <li>רעננו את הדף ולחצו שוב.</li>
+    </ul>
+    <button class="accept" id="retryGeo">נסה שוב למצוא מקלט</button>
+    <button class="close" id="closeGeoHelp">סגירה</button>
   </div>
 </div>
 
@@ -215,11 +309,12 @@ function applyArrow(){
   $("arrowSvg").style.transform = `rotate(${rot}deg)`;
 }
 
-function fail(msg){
+function fail(msg, geoHelp){
   $("result").classList.remove("show");
-  $("error").innerHTML = "⚠️ " + msg;
+  $("error").innerHTML = "⚠️ " + msg + (geoHelp ? ' <button id="geoHelpBtn" class="share-btn" style="margin-top:12px;color:#b91c1c;border-color:#fecaca;background:#fff;">❓ איך מפעילים גישה למיקום?</button>' : "");
   $("error").classList.add("show");
   $("status").innerHTML = "";
+  if(geoHelp){ const b=$("geoHelpBtn"); if(b) b.onclick=openGeoHelp; }
 }
 
 $("find").addEventListener("click", ()=>{
@@ -230,10 +325,9 @@ $("find").addEventListener("click", ()=>{
     pos=>{ $("find").disabled = false; show(pos.coords.latitude, pos.coords.longitude); },
     err=>{
       $("find").disabled = false;
-      const m = err.code === 1 ? "אין הרשאת מיקום. אפשרי גישה למיקום בהגדרות הדפדפן ונסי שוב."
-              : err.code === 2 ? "לא הצלחנו לאתר מיקום. ודאי ש‑GPS פעיל."
-              : "האיתור ארך זמן רב מדי. נסי שוב.";
-      fail(m);
+      if(err.code === 1){ fail("אין הרשאת מיקום — צריך לאפשר גישה למיקום.", true); }
+      else if(err.code === 2){ fail("לא הצלחנו לאתר מיקום. ודאו ש‑GPS פעיל ונסו שוב."); }
+      else { fail("האיתור ארך זמן רב מדי. נסו שוב."); }
     },
     { enableHighAccuracy:true, timeout:15000, maximumAge:0 }
   );
@@ -273,6 +367,19 @@ $("acceptLegal").addEventListener("click", ()=>{ try{ localStorage.setItem("lega
 legalOverlay.addEventListener("click", e=>{ if(e.target===legalOverlay) closeLegal(); });
 // הצגה אוטומטית פעם אחת בכניסה הראשונה
 try{ if(localStorage.getItem("legalAccepted")!=="1") openLegal(); }catch(e){}
+
+// ===== מדור הנחיות פיקוד העורף =====
+const guideOverlay = $("guideOverlay");
+$("openGuide").addEventListener("click", ()=> guideOverlay.classList.add("show"));
+$("closeGuide").addEventListener("click", ()=> guideOverlay.classList.remove("show"));
+guideOverlay.addEventListener("click", e=>{ if(e.target===guideOverlay) guideOverlay.classList.remove("show"); });
+
+// ===== הדרכת הפעלת מיקום =====
+const geoHelpOverlay = $("geoHelpOverlay");
+function openGeoHelp(){ geoHelpOverlay.classList.add("show"); }
+$("closeGeoHelp").addEventListener("click", ()=> geoHelpOverlay.classList.remove("show"));
+geoHelpOverlay.addEventListener("click", e=>{ if(e.target===geoHelpOverlay) geoHelpOverlay.classList.remove("show"); });
+$("retryGeo").addEventListener("click", ()=>{ geoHelpOverlay.classList.remove("show"); $("find").click(); });
 
 // רישום service worker לאופליין (רק כשמוגש מ‑https/localhost)
 if("serviceWorker" in navigator && location.protocol !== "file:"){
