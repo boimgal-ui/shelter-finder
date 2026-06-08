@@ -54,6 +54,17 @@
   .err{ background:#fef2f2; color:var(--danger); border:1px solid #fecaca; }
   footer{ text-align:center; color:#9fd7c2; font-size:12px; padding:16px 0 4px; }
   .pill{ display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,.12); padding:6px 12px; border-radius:999px; font-size:12px; color:#dff5ea; }
+  .safety{ margin-top:14px; background:#fff7ed; border:1px solid #fed7aa; color:#9a3412; border-radius:12px; padding:11px 13px; font-size:13px; line-height:1.5; font-weight:600; }
+  footer a.legal{ color:#bfe9d6; text-decoration:underline; cursor:pointer; }
+  .overlay{ position:fixed; inset:0; background:rgba(0,0,0,.55); display:none; align-items:center; justify-content:center; padding:18px; z-index:50; }
+  .overlay.show{ display:flex; }
+  .sheet{ background:#fff; color:var(--ink); border-radius:18px; max-width:520px; width:100%; max-height:85dvh; overflow:auto; padding:22px; box-shadow:0 20px 50px rgba(0,0,0,.4); }
+  .sheet h2{ margin:0 0 6px; font-size:20px; }
+  .sheet p.lead{ color:var(--muted); font-size:13px; margin:0 0 14px; }
+  .sheet ul{ margin:0; padding-inline-start:20px; }
+  .sheet li{ font-size:13.5px; line-height:1.6; margin-bottom:9px; color:#334155; }
+  .sheet .accept{ margin-top:18px; width:100%; border:0; border-radius:14px; padding:15px; font-size:16px; font-weight:800; color:#fff; background:var(--accent); cursor:pointer; }
+  .sheet .close{ margin-top:10px; width:100%; border:0; background:transparent; color:var(--muted); font-size:14px; cursor:pointer; }
 </style>
 </head>
 <body>
@@ -79,6 +90,7 @@
       <a id="gmaps" class="nav-g" target="_blank" rel="noopener">🗺️ נווט בגוגל מפס</a>
       <a id="waze" class="nav-w" target="_blank" rel="noopener">🚗 נווט ב‑Waze</a>
     </div>
+    <div class="safety">⚠️ אם אין מספיק זמן להגיע — היכנסו למרחב המוגן / חדר המדרגות הקרוב ביותר ופעלו לפי הנחיות פיקוד העורף.</div>
     <div class="coords" id="coords"></div>
     <div class="others" id="others"></div>
   </div>
@@ -86,7 +98,24 @@
   <div id="error" class="card err"></div>
 </main>
 
-<footer>נתוני מקלטים ציבוריים · ‎%COUNT% נקודות · המרחק בקו אווירי</footer>
+<footer>נתוני מקלטים ציבוריים · ‎%COUNT% נקודות · המרחק בקו אווירי<br><a class="legal" id="openLegal">תנאי שימוש וכתב ויתור</a></footer>
+
+<div class="overlay" id="legalOverlay">
+  <div class="sheet">
+    <h2>תנאי שימוש וכתב ויתור</h2>
+    <p class="lead">אנא קראו לפני השימוש. השימוש באפליקציה מהווה הסכמה לתנאים אלה.</p>
+    <ul>
+      <li>האפליקציה <b>"מקלט קרוב"</b> מספקת מידע כללי בלבד, המבוסס על נתונים ציבוריים/פתוחים שעשויים להיות חלקיים, לא מדויקים או לא מעודכנים. ייתכנו מקלטים חסרים, נעולים או שאינם זמינים בפועל.</li>
+      <li>המידע <b>אינו תחליף</b> להנחיות הרשמיות של <b>פיקוד העורף</b>. בכל אירוע יש לפעול לפי הנחיות פיקוד העורף ולפי לוח הזמנים לאזורכם.</li>
+      <li>אם לא ניתן להגיע למקלט המוצג בזמן הנדרש — היכנסו ל<b>מרחב המוגן הזמין הקרוב ביותר</b> (ממ״ד, מקלט, חדר מדרגות פנימי, או חדר ללא חלונות).</li>
+      <li>המרחקים מחושבים <b>בקו אווירי</b> (ישר) ואינם מסלול הליכה בפועל.</li>
+      <li>חלק מהמקלטים עשויים להיות בבעלות פרטית או מוסדית (כגון בתי ספר) וייתכן שאינם פתוחים לציבור בכל עת.</li>
+      <li>השימוש הוא <b>על אחריות המשתמש בלבד</b>. מפעילי האפליקציה ומפתחיה אינם אחראים לכל נזק, ישיר או עקיף, הנובע מהשימוש או מהסתמכות על המידע. אין כל אחריות (warranty) לדיוק, לזמינות או להתאמה למטרה כלשהי.</li>
+    </ul>
+    <button class="accept" id="acceptLegal">הבנתי ואני מאשר/ת</button>
+    <button class="close" id="closeLegal">סגירה</button>
+  </div>
+</div>
 
 <script>
 // ===== נתוני המקלטים מוטמעים כאן — [lat, lon, type] =====
@@ -196,6 +225,17 @@ function startCompass(){
   }, true);
 }
 startCompass();
+
+// ===== תנאי שימוש / כתב ויתור =====
+const legalOverlay = $("legalOverlay");
+function openLegal(){ legalOverlay.classList.add("show"); }
+function closeLegal(){ legalOverlay.classList.remove("show"); }
+$("openLegal").addEventListener("click", openLegal);
+$("closeLegal").addEventListener("click", closeLegal);
+$("acceptLegal").addEventListener("click", ()=>{ try{ localStorage.setItem("legalAccepted","1"); }catch(e){} closeLegal(); });
+legalOverlay.addEventListener("click", e=>{ if(e.target===legalOverlay) closeLegal(); });
+// הצגה אוטומטית פעם אחת בכניסה הראשונה
+try{ if(localStorage.getItem("legalAccepted")!=="1") openLegal(); }catch(e){}
 
 // רישום service worker לאופליין (רק כשמוגש מ‑https/localhost)
 if("serviceWorker" in navigator && location.protocol !== "file:"){
